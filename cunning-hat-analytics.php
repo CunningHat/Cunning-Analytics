@@ -1,11 +1,9 @@
 <?php
 /*
 Plugin Name: Cunning Hat Analytics
-Author: Cunning Hat
-Author URI: https://github.com/CunningHat
-Version: 1.0.1
+Author: 1.0.1a
 Description: A simple analytics & ecommerce analytics plugin. That's free. Forever.
-Text Domain: cunning-hat-analytics
+Text Domain: amory-analytics
 Licence: GPL2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,16 +31,13 @@ if(!class_exists('CHAnalytics')){
 		public function __construct() {
 			
 			require_once plugin_dir_path( __FILE__ ) . 'public/tracking.php';
-			require_once plugin_dir_path( __FILE__ ) . 'admin/set-order-notes.php';
-			require_once plugin_dir_path( __FILE__ ) . 'admin/settings.php';
 			
-			$CHAnalytics_Tracking = new CHAnalytics_Tracking();
-			$CHAnalytics_Settings = new CHAnalytics_Settings();
+			$AmoryAnalytics_Tracking = new CHAnalytics_Tracking();
 			
 		}
 		
 	}
 	
-	$CHAnalytics = new CHAnalytics();
+	$AmoryAnalytics = new CHAnalytics();
 	
 }

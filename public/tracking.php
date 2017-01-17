@@ -17,19 +17,14 @@
 			
 			public function create_pageview_script() {
 // 				if(is_admin_bar_showing()) return;
-				global $wp;
-				$CHAnalytics_SetOrderNotes = new CHAnalytics_OrderNotes();
-				
 				ob_start();
 				?>
 				<script>
-					ga('create', '<?php echo get_option('ch_tracking_code') ?>', 'auto');
+					ga('create', 'UA-90474512-1', 'auto');
 					<?php	
 						if(function_exists('is_wc_endpoint_url')):
 							if(is_wc_endpoint_url( 'order-received' )):
-								if(!$CHAnalytics_SetOrderNotes->is_tracked_by_CH($wp->query_vars['order-received'])):
-									$this->TrackOrder();
-								endif;
+								$this->TrackOrder();
 							endif;
 						endif;
 					?>
@@ -48,7 +43,7 @@
 				global $wp;
 				$order_id = $wp->query_vars['order-received'];
 				$order = new WC_Order( $order_id );
-				
+			
 				$item_category = '';
 				
 				$order_items = $order->get_items();
@@ -64,7 +59,7 @@
 						$categories = get_the_terms( $item_id, 'product_cat' ); 
 						
 						// wrapper to hide any errors from top level categories or products without category
-						if ( $categories && ! is_wp_error( $categories ) ) : 
+						if ( $categories && ! is_wp_error( $category ) ) : 
 						
 						    // loop through each cat
 						    foreach($categories as $category) :
@@ -115,8 +110,6 @@
 						  'coupon': '<?php echo $all_order_coupons; ?>'
 						});
 				<?php
-				$CHAnalytics_SetOrderNotes = new CHAnalytics_OrderNotes();
-				$CHAnalytics_SetOrderNotes->AddTrackedNote($order);
 			}
 			
 		}
