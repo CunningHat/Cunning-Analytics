@@ -16,19 +16,24 @@
 			}
 			
 			public function create_pageview_script() {
-// 				if(is_admin_bar_showing()) return;
+				if(is_admin_bar_showing()) return;
+				global $wp;
+				$CHAnalytics_SetOrderNotes = new CHAnalytics_OrderNotes();
+				
 				ob_start();
 				?>
 				<script>
-					ga('create', 'UA-90474512-1', 'auto');
+					_chTracker('create', '<?php echo get_option('ch_tracking_code') ?>', 'auto');
 					<?php	
 						if(function_exists('is_wc_endpoint_url')):
 							if(is_wc_endpoint_url( 'order-received' )):
-								$this->TrackOrder();
+								if(!$CHAnalytics_SetOrderNotes->is_tracked_by_CH($wp->query_vars['order-received'])):
+									$this->TrackOrder();
+								endif;
 							endif;
 						endif;
 					?>
-					ga('send', 'pageview');
+					_chTracker('send', 'pageview');
 				
 				</script>
 				<?php
@@ -37,13 +42,13 @@
 			
 			public function TrackOrder() {
 			?>
-				ga('require', 'ec');
+				_chTracker('require', 'ec');
 				<?php
 					
 				global $wp;
 				$order_id = $wp->query_vars['order-received'];
 				$order = new WC_Order( $order_id );
-			
+				
 				$item_category = '';
 				
 				$order_items = $order->get_items();
@@ -59,7 +64,7 @@
 						$categories = get_the_terms( $item_id, 'product_cat' ); 
 						
 						// wrapper to hide any errors from top level categories or products without category
-						if ( $categories && ! is_wp_error( $category ) ) : 
+						if ( $categories && ! is_wp_error( $categories ) ) : 
 						
 						    // loop through each cat
 						    foreach($categories as $category) :
@@ -78,7 +83,7 @@
 						$order_qty = $order_item['item_meta']['_qty'][0];
 						
 						?>
-						ga('ec:addProduct', {
+						_chTracker('ec:addProduct', {
 						  'id': '<?php echo $item_id; ?>',
 						  'name': '<?php echo $order_item['name']; ?>',
 						  'category': '<?php echo $item_category; ?>',
@@ -101,7 +106,7 @@
 				$order_total = number_format((float)$order_total, 2, '.', '');
 				
 				?>
-						ga('ec:setAction', 'purchase', {
+						_chTracker('ec:setAction', 'purchase', {
 						  'id': '<?php echo $order->get_order_number(); ?>',
 						  'affiliation': '',
 						  'revenue': '<?php echo $order_total; ?>',
@@ -110,6 +115,8 @@
 						  'coupon': '<?php echo $all_order_coupons; ?>'
 						});
 				<?php
+				$CHAnalytics_SetOrderNotes = new CHAnalytics_OrderNotes();
+				$CHAnalytics_SetOrderNotes->AddTrackedNote($order);
 			}
 			
 		}
