@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Cunning Hat Analytics
-Author: 1.0.0
+Author: 1.0.1a
 Description: A simple analytics & ecommerce analytics plugin. That's free. Forever.
 Text Domain: amory-analytics
 Licence: GPL2
